@@ -1,0 +1,23 @@
+package hr.fer.zemris.java.hw06.demo4;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class StudentDemo {
+  public static void main(String[] args) throws IOException {
+    List<String> lines = Files.readAllLines(Paths.get("./src/main/resources/studenti.txt"));
+    List<StudentRecord> records = convert(lines);
+  }
+
+  private static List<StudentRecord> convert(List<String> lines) {
+    List<StudentRecord> result = new ArrayList<>();
+    return null;
+  }
+}

@@ -1,0 +1,64 @@
+package hr.fer.zemris.java.hw06.demo4;
+
+/**
+ * Instances of this class represent records for one student.
+ * 
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class StudentRecord {
+  /**
+   * Field variables of one student record.
+   */
+  private String jmbag;
+  private String lastName;
+  private String firstName;
+  private double midTermExamPoints;
+  private double endTermExamPoints;
+  private double laboratoryPoints;
+  private int finalGrade;
+
+
+
+  public StudentRecord(String jmbag, String lastName, String firstName, double midTermExamPoints,
+      double endTermExamPoints, double laboratoryPoints, int finalGrade) {
+    this.jmbag = jmbag;
+    this.lastName = lastName;
+    this.firstName = firstName;
+    this.midTermExamPoints = midTermExamPoints;
+    this.endTermExamPoints = endTermExamPoints;
+    this.laboratoryPoints = laboratoryPoints;
+    this.finalGrade = finalGrade;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    StudentRecord other = (StudentRecord) obj;
+    if (jmbag == null) {
+      if (other.jmbag != null)
+        return false;
+    } else if (!jmbag.equals(other.jmbag))
+      return false;
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((jmbag == null) ? 0 : jmbag.hashCode());
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s %s %s %.2f %.2f %d", jmbag, lastName, firstName, midTermExamPoints, endTermExamPoints, laboratoryPoints, finalGrade);
+  }
+
+}

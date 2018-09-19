@@ -1,0 +1,64 @@
+package hr.fer.zemris.java.gui.charts;
+
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JComponent;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class BarChartComponent extends JComponent {
+
+  private final static int OFFSET = 20;
+
+  /**
+   * Default serial version UID.
+   */
+  private static final long serialVersionUID = 1L;
+  /**
+   * Reference to the {@link BarChart} object displayed by this component.
+   */
+  private BarChart chart;
+
+  public BarChartComponent(BarChart chart) {
+    super();
+    this.chart = chart;
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+//    super.paintComponent(g);
+    int screenWidth = getWidth();
+    int screenHeight = getHeight();
+    FontMetrics metrics = g.getFontMetrics(g.getFont());
+    Graphics2D g2d = (Graphics2D) g;
+    AffineTransform original = g2d.getTransform();
+    AffineTransform at = new AffineTransform();
+    at.rotate(-Math.PI / 2);
+    g2d.setTransform(at);
+    g2d.drawString(chart.getyInfo(), (-screenHeight-metrics.stringWidth(chart.getyInfo())) / 2, OFFSET);
+    g2d.setTransform(original);
+    
+    int rowCount = (chart.getMaxY()-chart.getMinY())/chart.getSpacing();
+    int columnCount = chart.getValues().size();
+    
+    int rowHeight = screenHeight / rowCount;
+    int columnWidth = screenWidth/ columnCount;
+
+    g2d.drawLine(3 * OFFSET, 0, 3 * OFFSET, screenHeight);
+    int index=0;
+    for (int i = chart.getMinY(); i <= chart.getMaxY(); i += chart.getSpacing()) {
+      g2d.drawString(String.valueOf(i), 2 * OFFSET, Math.round((screenHeight - index * rowHeight)*.8));
+      index++;
+    }
+
+    g2d.drawString(chart.getxInfo(), (screenWidth - metrics.stringWidth(chart.getxInfo())) / 2, screenHeight - OFFSET);
+
+  }
+}

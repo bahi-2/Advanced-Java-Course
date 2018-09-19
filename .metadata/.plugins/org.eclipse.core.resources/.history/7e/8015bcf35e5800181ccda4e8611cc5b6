@@ -1,0 +1,166 @@
+package hr.fer.zemris.java.gui.layouts;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.LayoutManager2;
+import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class CalcLayout implements LayoutManager2 {
+
+  private static final int NUMBER_OF_ROWS = 5;
+  private static final int NUMBER_OF_COLUMNS = 7;
+  private static final int MIN_POSITION = 1;
+  private static final Color BG_COLOR = new Color(0, 0, 255);
+  private int spacing;
+  private Map<Component, RCPosition> components;
+  private int preferredWidth;
+  private int preferredHeight;
+  private int minWidth;
+  private int minHeight;
+
+  public CalcLayout() {
+    this(0);
+  }
+
+  public CalcLayout(int spacing) {
+    this.components = new HashMap<>();
+    this.spacing = spacing;
+  }
+
+  @Override
+  public void addLayoutComponent(String str, Component component) {
+  }
+
+  @Override
+  public void layoutContainer(Container container) {
+    setSizes(container.getComponents());
+    for (Component comp : components.keySet()) {
+      RCPosition position = components.get(comp);
+      Rectangle rect = new Rectangle();
+
+      //@formatter:off
+      int c = position.getColumn();
+      int r = position.getRow();
+      if (c > NUMBER_OF_COLUMNS ||
+          c < MIN_POSITION ||
+          r > NUMBER_OF_ROWS ||
+          r < MIN_POSITION
+          ) {
+        throw new CalcLayoutException("Invalid position: "+position);
+      }
+      
+      
+      
+      rect.x = position.getColumn();
+      rect.y = position.getRow();
+      
+      comp.setBounds(rect);
+    }
+  }
+
+  private void setSizes(Component[] comp) {
+    // Reset preferred/minimum width and height.
+    preferredWidth = 0;
+    preferredHeight = 0;
+    minWidth = 0;
+    minHeight = 0;
+
+    for (int i = 0; i < comp.length; i++) {
+      Component c = comp[i];
+
+      if (c.isVisible()) {
+        Dimension preferred = c.getPreferredSize();
+
+        if (i > 0) {
+          preferredWidth += preferred.width / 2;
+          preferredHeight += spacing;
+        } else {
+          preferredWidth = preferred.width;
+        }
+        preferredHeight += preferred.height;
+
+        minWidth = Math.max(c.getMinimumSize().width, minWidth);
+        minHeight = preferredHeight;
+      }
+    }
+  }
+
+  @Override
+  public Dimension minimumLayoutSize(Container container) {
+    return new Dimension(); // nula??
+  }
+
+  @Override
+  public Dimension preferredLayoutSize(Container container) {
+    Dimension dim = new Dimension(0, 0);
+    int nComps = container.getComponentCount();
+
+    setSizes(container.getComponents());
+
+    container.getPreferredSize();
+
+    // Always add the container's insets!
+    Insets insets = container.getInsets();
+    dim.width = preferredWidth + insets.left + insets.right;
+    dim.height = preferredHeight + insets.top + insets.bottom;
+
+    return dim;
+  }
+
+  @Override
+  public void removeLayoutComponent(Component component) {
+    components.remove(component);
+  }
+
+  @Override
+  public void addLayoutComponent(Component component, Object constraints) {
+    if (constraints instanceof RCPosition) {
+      components.put(component, (RCPosition) constraints);
+    } else if (constraints instanceof String) {
+      components.put(component, parseConstraints((String) constraints));
+    } else {
+      throw new CalcLayoutException();
+    }
+  }
+
+  private RCPosition parseConstraints(String position) {
+    Pattern pattern = Pattern.compile("([0-9])\\,([0-9])");
+    Matcher matcher = pattern.matcher(position);
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException("Incorrect constraint format!");
+    }
+    return new RCPosition(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+  }
+
+  @Override
+  public float getLayoutAlignmentX(Container container) {
+    return 0.5f;
+  }
+
+  @Override
+  public float getLayoutAlignmentY(Container container) {
+    return 0.5f;
+  }
+
+  @Override
+  public void invalidateLayout(Container container) {
+  }
+
+  @Override
+  public Dimension maximumLayoutSize(Container container) {
+    return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE); // pitaj za ovo
+  }
+
+}

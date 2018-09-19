@@ -1,0 +1,10 @@
+AbstractTextEditor.Color.Background.SystemDefault=false
+AbstractTextEditor.Color.SelectionBackground.SystemDefault=false
+AbstractTextEditor.Color.SelectionForeground.SystemDefault=false
+eclipse.preferences.version=1
+net.sf.eclipsecs.error.color=164,0,0
+net.sf.eclipsecs.error.text.style=NONE
+net.sf.eclipsecs.info.text.style=NONE
+net.sf.eclipsecs.warning.color=136,138,133
+net.sf.eclipsecs.warning.text.style=NONE
+overviewRuler_migration=migrated_3.1

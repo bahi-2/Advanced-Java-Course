@@ -1,0 +1,83 @@
+package hr.fer.zemris.java.gui.charts;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JComponent;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class BarChartComponent extends JComponent {
+
+  private final static int OFFSET = 20;
+
+  /**
+   * Default serial version UID.
+   */
+  private static final long serialVersionUID = 1L;
+  /**
+   * Reference to the {@link BarChart} object displayed by this component.
+   */
+  private BarChart chart;
+
+  public BarChartComponent(BarChart chart) {
+    super();
+    this.chart = chart;
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    // super.paintComponent(g);
+    int screenWidth = getWidth();
+    int screenHeight = getHeight();
+    FontMetrics metrics = g.getFontMetrics(g.getFont());
+    Graphics2D g2d = (Graphics2D) g;
+    AffineTransform original = g2d.getTransform();
+    AffineTransform at = new AffineTransform();
+    at.rotate(-Math.PI / 2);
+    g2d.setTransform(at);
+    g2d.drawString(chart.getyInfo(), (-screenHeight - metrics.stringWidth(chart.getyInfo())) / 2,
+        OFFSET);
+    g2d.setTransform(original);
+
+    int rowCount = (chart.getMaxY() - chart.getMinY()) / chart.getSpacing();
+    int columnCount = chart.getValues().size();
+
+    int rowHeight = screenHeight / rowCount;
+    int columnWidth = screenWidth / columnCount;
+
+    g2d.drawLine(3 * OFFSET, OFFSET * 2, 3 * OFFSET, screenHeight - 3 * OFFSET);
+    int index = 0;
+    for (int i = chart.getMinY(); i <= chart.getMaxY(); i += chart.getSpacing()) {
+      int y2 = (int) Math.round((screenHeight - index * rowHeight + 3 * OFFSET) * .7);
+      g2d.drawString(String.valueOf(i), 2 * OFFSET, y2);
+      g2d.drawLine(3 * OFFSET - 5, y2, 3 * OFFSET, y2);
+      index++;
+    }
+
+    for (int i = 0; i <= columnCount; i++) {
+      int x2 = (int) Math.round((screenWidth - i * columnWidth + 3 * OFFSET));
+      g2d.drawString(String.valueOf(i), screenWidth - x2, screenHeight - 2 * OFFSET);
+      g2d.drawLine(x2, screenHeight - 3 * OFFSET + 5, x2, screenHeight - 3 * OFFSET);
+      index++;
+    }
+
+    g2d.drawString(chart.getxInfo(), (screenWidth - metrics.stringWidth(chart.getxInfo())) / 2,
+        screenHeight - OFFSET);
+    g2d.drawLine(3 * OFFSET, screenHeight - 3 * OFFSET, screenWidth - 3 * OFFSET,
+        screenHeight - 3 * OFFSET);
+
+    for (XYValue value : chart.getValues()) {
+      int x2 = (int) Math.round((screenWidth - value.getX() * columnWidth + 3 * OFFSET));
+      g2d.setColor(Color.blue);
+      g2d.fillRect(value.getX()-1*columnWidth, value.getY(), 100, 100);
+    }
+  }
+}

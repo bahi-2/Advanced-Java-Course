@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename Java project &apos;hw08-0036489244.zip_expanded&apos; to &apos;hw08-0036489244&apos;&#x0A;- Original element: &apos;hw08-0036489244.zip_expanded&apos;&#x0A;- Renamed element: &apos;hw08-0036489244.zip_expanded&apos;&#x0A;- Update references to refactored element" description="Rename Java project &apos;hw08-0036489244.zip_expanded&apos;" flags="7" id="org.eclipse.jdt.ui.rename.java.project" input="=hw08-0036489244.zip_expanded" name="hw08-0036489244" references="true" stamp="1525608276625" version="1.0"/>
+</session>

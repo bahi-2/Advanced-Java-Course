@@ -1,0 +1,55 @@
+package hr.fer.zemris.java.gui.calc;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import hr.fer.zemris.java.gui.layouts.CalcLayout;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class Calculator {
+  private static void createAndShowGUI() {
+    JFrame frame = new JFrame("Calculator");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    JPanel p = new JPanel(new CalcLayout(5));
+    p.add(new JLabel("1,1"), "1,1");
+
+    JLabel label1 = new JLabel("1,6");
+    label1.setPreferredSize(new Dimension(50, 50));
+    p.add(label1, "1,6");
+
+    p.add(new JLabel("1,7"), "1,7");
+
+    for (int i = 2; i <= 5; i++) {
+      for (int j = 1; j <= 7; j++) {
+        String lab = i + "," + j;
+        p.add(new JLabel(lab), lab);
+      }
+    }
+
+    for (Component comp : p.getComponents()) {
+      JLabel label = (JLabel) comp;
+      label.setOpaque(true);
+      label.setBackground(Color.blue);
+    }
+    frame.setContentPane(p);
+    frame.pack();
+    frame.setVisible(true);
+  }
+
+  public static void main(String[] args) {
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        createAndShowGUI();
+      }
+    });
+  }
+}

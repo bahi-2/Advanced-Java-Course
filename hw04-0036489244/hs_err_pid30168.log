@@ -1,0 +1,33 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f74886a3fb2, pid=30168, tid=30189
+#
+# JRE version: Java(TM) SE Runtime Environment (9.0+11) (build 9.0.4+11)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (9.0.4+11, mixed mode, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libjimage.so+0x3fb2]  ImageStrings::find(Endian*, char const*, int*, unsigned int)+0x42
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P" (or dumping to /home/pago/workspaces/OPJJ - dz/hw04-0036489244/core.30168)
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:35733 -Dfile.encoding=UTF-8 demo.Glavni2
+
+Host: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz, 4 cores, 7G, Ubuntu 17.10
+Time: Thu Apr  5 01:25:43 2018 CEST elapsed time: 150 seconds (0d 0h 2m 30s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f7484163800):  JavaThread "Signal Dispatcher" daemon [_thread_in_vm, id=30189, stack(0x00007f743927b000,0x00007f743937c000)]
+
+Stack: [0x00007f743927b000,0x00007f743937c000],  sp=0x00007f7439379270,  free space=1016k
+Native frames: (J=compiled Java code, A=aot compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libjimage.so+0x3fb2]  ImageStrings::find(Endian*, char const*, int*, unsigned int)+0x42
+C  [libjimage.so+0x4b8c]  ImageFileReader::find_location_index(char const*, unsigned long long*) const+0x3c
+C  [libjimage.so+0x505a]  JIMAGE_FindResource+0xba
+V  [libjvm.so+0x5aae8e]

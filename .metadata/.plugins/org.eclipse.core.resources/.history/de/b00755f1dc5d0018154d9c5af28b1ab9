@@ -1,0 +1,158 @@
+package hr.fer.zemris.java.hw11.jnotepadpp;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+/**
+ * JNotepadPP is an implementation of a text editor that supports working on
+ * multiple documents in separate tabs.
+ * 
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class JNotepadPP extends JFrame {
+
+  /**
+   * Generated serial version id.
+   */
+  private static final long serialVersionUID = 751653141532945136L;
+
+  /**
+   * Default constructor which lays out the program on the display.
+   */
+  public JNotepadPP() {
+    // setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); // delete this line later
+    setTitle("JNotepadPP");
+    setVisible(true);
+    initGUI();
+    pack();
+  }
+
+  /**
+   * Method initializes the GUI along with required components for the text
+   * editor.
+   */
+  private void initGUI() {
+    // initialize layout
+    getContentPane().setLayout(new BorderLayout());
+
+    // initialize menu bar and toolbar
+    JMenuBar menuBar = new JMenuBar();
+    JToolBar toolBar = new JToolBar("Toolbar");
+    addButtons(toolBar);
+    setPreferredSize(new Dimension(450, 130));
+
+    // lay out the content pane
+    getContentPane().add(toolBar, BorderLayout.PAGE_START);
+    add(toolBar, BorderLayout.PAGE_START);
+    // add(scrollPane, BorderLayout.CENTER);
+    this.setJMenuBar(menuBar);
+
+    // Build the first menu.
+    JMenu menu = new JMenu("Promijeni");
+    menu.setMnemonic(KeyEvent.VK_P);
+    menu.getAccessibleContext()
+        .setAccessibleDescription("The only menu in this program that has menu items");
+    menuBar.add(menu);
+
+    // a group of JMenuItems
+    JMenuItem menuItem = new JMenuItem("A text-only menu item", KeyEvent.VK_T);
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
+    menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+    menu.add(menuItem);
+
+    menuItem = new JMenuItem("Both text and icon", new ImageIcon("images/middle.gif"));
+    menuItem.setMnemonic(KeyEvent.VK_B);
+    menu.add(menuItem);
+
+    menuItem = new JMenuItem(new ImageIcon("images/middle.gif"));
+    menuItem.setMnemonic(KeyEvent.VK_D);
+
+    // a submenu
+    menu.addSeparator();
+    JMenu submenu = new JMenu("A submenu");
+    submenu.setMnemonic(KeyEvent.VK_S);
+
+    menuItem = new JMenuItem("An item in the submenu");
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
+    submenu.add(menuItem);
+
+    menuItem = new JMenuItem("Another item");
+    submenu.add(menuItem);
+    menu.add(submenu);
+
+    // Build second menu in the menu bar.
+    menu = new JMenu("Another Menu");
+    menu.setMnemonic(KeyEvent.VK_N);
+    menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
+    menuBar.add(menu);
+
+    // add the menu to the layout
+    menu.add(menuItem);
+  }
+
+  protected void addButtons(JToolBar toolBar) {
+    JButton button = null;
+
+    // first button
+    button = makeNavigationButton("save-button-red", "Previous",
+        "Back to previous something-or-other", "Previous");
+    toolBar.add(button);
+
+    // second button
+    button = makeNavigationButton("save-button", "Up", "Up to something-or-other", "Up");
+    toolBar.add(button);
+
+    // third button
+    button = makeNavigationButton("save-button", "Next", "Forward to something-or-other", "Next");
+    toolBar.add(button);
+  }
+
+  protected JButton makeNavigationButton(String imageName, String actionCommand, String toolTipText,
+      String altText) {
+    // Look for the image.
+    String imgLocation = "icons/" + imageName + ".png";
+    URL imageURL = JNotepadPP.class.getResource(imgLocation);
+
+    // Create and initialize the button.
+    JButton button = new JButton();
+    button.setActionCommand(actionCommand);
+    button.setToolTipText(toolTipText);
+    // button.addActionListener(this);
+
+    if (imageURL != null) { // image found
+      button.setIcon(new ImageIcon(imageURL, altText));
+    } else { // no image found
+      button.setText(altText);
+      System.err.println("Resource not found: " + imgLocation);
+    }
+
+    return button;
+  }
+
+  /**
+   * Main method which invokes an instance of a notepad program.
+   * 
+   * @param args
+   *          unused here
+   */
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> new JNotepadPP());
+  }
+
+}

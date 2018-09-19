@@ -1,0 +1,134 @@
+package hr.fer.zemris.java.gui.calc;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.DoubleBinaryOperator;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class CalcModelImpl implements CalcModel {
+
+  private String result = null;
+  private double activeOperand;
+  private boolean isOperandSet = false;
+  private DoubleBinaryOperator pendingOperation;
+  private List<CalcValueListener> observers = new ArrayList<>();
+
+  @Override
+  public void addCalcValueListener(CalcValueListener l) {
+    observers.add(l);
+  }
+
+  @Override
+  public void removeCalcValueListener(CalcValueListener l) {
+    observers.remove(l);
+  }
+
+  @Override
+  public double getValue() {
+    return result == null ? 0 : Double.parseDouble(result);
+  }
+
+  @Override
+  public void setValue(double value) {
+    if (Double.isNaN(value) || Double.isInfinite(value)) {
+    } else {
+      result = Double.toString(value);
+      informObservers();
+    }
+  }
+
+  @Override
+  public void clear() {
+    result = null;
+    informObservers();
+  }
+
+  @Override
+  public void clearAll() {
+    result = null;
+    informObservers();
+    pendingOperation = null;
+    activeOperand = 0;
+  }
+
+  @Override
+  public void swapSign() {
+    if (result != null) {
+      setValue(getValue() * -1);
+    }
+  }
+
+  @Override
+  public void insertDecimalPoint() {
+    if (result != null && !result.contains(".")) {
+      result = result.concat(".");
+      informObservers();
+    }
+    if (result == null) {
+      result = "0.";
+      informObservers();
+    }
+  }
+
+  @Override
+  public void insertDigit(int digit) {
+    result = (result == null) ? String.valueOf(digit) : result.concat(String.valueOf(digit));
+    informObservers();
+  }
+
+  @Override
+  public boolean isActiveOperandSet() {
+    return isOperandSet;
+  }
+
+  @Override
+  public double getActiveOperand() {
+    return activeOperand;
+  }
+
+  @Override
+  public void setActiveOperand(double activeOperand) {
+    this.activeOperand = activeOperand;
+    isOperandSet = true;
+  }
+
+  @Override
+  public void clearActiveOperand() {
+    activeOperand = 0;
+    isOperandSet = false;
+  }
+
+  @Override
+  public DoubleBinaryOperator getPendingBinaryOperation() {
+    if (pendingOperation == null) {
+      throw new IllegalStateException("Binary operation not set.");
+    }
+    return pendingOperation;
+  }
+
+  @Override
+  public void setPendingBinaryOperation(DoubleBinaryOperator op) {
+    pendingOperation = Objects.requireNonNull(op);
+  }
+
+  @Override
+  public String toString() {
+    if (result == null)
+      return "0";
+    else {
+      result = result.replaceFirst("^0+", "0");
+      result = result.replaceFirst("^(0)[1-9]", "$1");
+    }
+  }
+
+  private void informObservers() {
+    for (CalcValueListener observer : observers) {
+      observer.valueChanged(this);
+    }
+  }
+
+}

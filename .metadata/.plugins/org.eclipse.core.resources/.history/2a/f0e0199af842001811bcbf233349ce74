@@ -1,0 +1,17 @@
+package hr.fer.zemris.java.hw06.demo4;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class StudentDemo {
+  public static void main(String[] args) throws IOException {
+    List<String> lista = Files.readAllLines(Paths.get("./src/main/resources/studenti.txt"));
+    System.out.println(lista);
+  }
+}

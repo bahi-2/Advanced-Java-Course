@@ -1,0 +1,83 @@
+package hr.fer.zemris.java.gui.charts;
+
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JComponent;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class BarChartComponent extends JComponent {
+
+  private int startX;
+  private int screenWidth;
+  private int startY;
+  private int screenHeight;
+  private final static int OFFSET = 20;
+
+  /**
+   * Default serial version UID.
+   */
+  private static final long serialVersionUID = 1L;
+  /**
+   * Reference to the {@link BarChart} object displayed by this component.
+   */
+  private BarChart chart;
+
+  public BarChartComponent(BarChart chart) {
+    super();
+    this.chart = chart;
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+//    super.paintComponent(g);
+    screenWidth = getWidth() + getInsets().left + getInsets().right;
+    screenHeight = getHeight();
+    Graphics2D g2d = (Graphics2D) g;
+    AffineTransform original = g2d.getTransform();
+    AffineTransform at = new AffineTransform();
+    at.rotate(-Math.PI / 2);
+    g2d.setTransform(at);
+    g2d.drawString(chart.getyInfo(), (startY - screenHeight) / 2, OFFSET);
+    g2d.setTransform(original);
+    
+    int rowCount = (chart.getMaxY()-chart.getMinY())/chart.getSpacing();
+    int columnCount = chart.getValues().size();
+    
+    int rowHeight = screenHeight / rowCount;
+    int columnWidth = screenWidth/ columnCount;
+    
+    for (int i = chart.getMinY(); i <= chart.getMaxY(); i += chart.getSpacing()) {
+      g2d.drawString(String.valueOf(i*chart.getSpacing()), 2 * OFFSET, screenHeight - 2 * OFFSET - i * rowHeight);
+    }
+    g2d.drawLine(3 * OFFSET, startY, 3 * OFFSET, screenHeight);
+
+    FontMetrics metrics = g.getFontMetrics(g.getFont());
+    g2d.drawString(chart.getxInfo(), (screenWidth - metrics.stringWidth(chart.getxInfo())) / 2, screenHeight - OFFSET);
+
+  }
+  /**
+   * Draw a String centered in the middle of a Rectangle.
+   *
+   * @param g The Graphics instance.
+   * @param text The String to draw.
+   * @param rect The Rectangle to center the text in.
+   */
+  public void drawCenteredString(Graphics g, String text, Rectangle rect) {
+      // Get the FontMetrics
+      FontMetrics metrics = g.getFontMetrics(g.getFont());
+      // Determine the X coordinate for the text
+      int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+      // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+      int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+      // Draw the String
+      g.drawString(text, x, y);
+  }
+}

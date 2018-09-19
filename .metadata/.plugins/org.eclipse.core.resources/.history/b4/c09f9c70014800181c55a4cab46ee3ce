@@ -1,0 +1,81 @@
+package hr.fer.zemris.java.hw07.crypto;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Scanner;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import static hr.fer.zemris.java.hw07.crypto.Util.*;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class Crypto {
+
+  public static final String CHECK_SHA = "checksha";
+  public static final String ENCRYPTION = "encrypt";
+  public static final String DECRYPTION = "decrypt";
+
+  public static void main(String[] args) throws IOException {
+    if (args.length < 1) {
+      throw new IllegalArgumentException("Missing command line arguments.");
+    }
+
+    String action = args[0];
+    switch (action) {
+      case CHECK_SHA:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 1 arguments for action checksha.");
+        }
+        String fileName = args[1];
+        System.out.print("Please provide expected sha-256 digest for " + fileName + ":\n>");
+        Scanner sc = new Scanner(System.in);
+        String expectedDigest = sc.nextLine();
+        sc.close();
+        String actualDigest = digest(fileName);
+        if (expectedDigest.equals(actualDigest)) {
+          System.out
+              .println("Digesting completed. Digest of " + fileName + " matches expected digest.");
+        } else {
+          System.out.println("Digesting completed. Digest of " + fileName
+              + " does not match the expected digest. Digest\n" + "was: " + actualDigest);
+        }
+        break;
+
+      case ENCRYPTION:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 2 arguments for action encrypt.");
+        }
+        break;
+
+      case DECRYPTION:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 2 arguments for action decrypt.");
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Action \"" + action + "\"isn't supported.");
+    }
+  }
+
+  private static String digest(String fileName) throws IOException {
+    Files.newBufferedReader(Paths.get(fileName));
+    String keyText = "";
+    String ivText = "";
+    SecretKeySpec keySpec = new SecretKeySpec(Util.hextobyte(keyText), "AES");
+    AlgorithmParameterSpec paramSpec = new IvParameterSpec(hextobyte(ivText));
+    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, keySpec, paramSpec);
+    System.out.println("ta-daaa");
+  }
+}

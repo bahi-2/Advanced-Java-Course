@@ -1,0 +1,57 @@
+package hr.fer.zemris.java.gui.charts;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.JComponent;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class BarChartComponent extends JComponent {
+
+  private int startX;
+  private int endX;
+  private int startY;
+  private int endY;
+  private final static int OFFSET = 20;
+
+  /**
+   * Default serial version UID.
+   */
+  private static final long serialVersionUID = 1L;
+  /**
+   * Reference to the {@link BarChart} object displayed by this component.
+   */
+  private BarChart chart;
+
+  public BarChartComponent(BarChart chart) {
+    super();
+    this.chart = chart;
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    startX = 0;
+    endX = getWidth();
+    startY = 0;
+    endY = getHeight();
+    Graphics2D g2d = (Graphics2D) g;
+    AffineTransform original = g2d.getTransform();
+    AffineTransform at = new AffineTransform();
+    at.rotate(-Math.PI / 2);
+    g2d.setTransform(at);
+    g2d.drawString(chart.getyInfo(), (startY - endY) / 2, OFFSET);
+    g2d.setTransform(original);
+    int unit = (chart.getMaxY()-chart.getMinY())/chart.getSpacing();
+    for (int i=chart.getMinY();i<chart.getMaxY();i+=chart.getSpacing()) {
+      g2d.drawString(String.valueOf(i), 2*OFFSET, endY-i*unit);
+    }
+    g2d.drawLine(3*OFFSET, startY, 3*OFFSET, endY);
+
+  }
+
+}

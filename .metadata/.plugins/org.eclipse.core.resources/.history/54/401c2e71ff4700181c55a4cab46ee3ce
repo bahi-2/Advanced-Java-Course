@@ -1,0 +1,50 @@
+package hr.fer.zemris.java.hw07.crypto;
+
+/**
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class Crypto {
+
+  public static final String CHECK_SHA = "checksha";
+  public static final String ENCRYPTION = "encrypt";
+  public static final String DECRYPTION = "decrypt";
+
+  public static void main(String[] args) {
+    if (args.length < 1) {
+      throw new IllegalArgumentException("Missing command line arguments.");
+    }
+
+    String action = args[0];
+    switch (action) {
+      case CHECK_SHA:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 1 arguments for action checksha.");
+        }
+        break;
+
+      case ENCRYPTION:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 2 arguments for action encrypt.");
+        }
+        break;
+        
+      case DECRYPTION:
+        if (args.length != 2) {
+          throw new IllegalArgumentException(
+              "You must provide exactly 2 arguments for action decrypt.");
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Action \"" + action + "\"isn't supported.");
+    }
+  }
+
+  public void checksha() {
+    // TODO Auto-generated method stub
+    System.out.println("ta-daaa");
+  }
+}

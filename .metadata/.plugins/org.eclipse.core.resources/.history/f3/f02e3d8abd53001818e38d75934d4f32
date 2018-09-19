@@ -1,0 +1,111 @@
+package hr.fer.zemris.java.fractals;
+
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import hr.fer.zemris.math.Complex;
+
+/**
+ * Main program which takes the user's input, calculates a fractal and displays
+ * it in the graphic unit interface, called fractal viewer.
+ * 
+ * @author Blaz Bagic
+ * @version 1.0
+ */
+public class Newton {
+
+  /** When a user enters this string, the input is closed. */
+  private static final String END_OF_INPUT = "done";
+
+  /**
+   * Main method which asks the user to enter polynomial roots and then it
+   * displays the calculated fractal in the fractal viewer.
+   * 
+   * @param args
+   *          command line arguments, unused here
+   */
+  public static void main(String[] args) {
+    System.out.println("Welcome to Newton-Raphson iteration-based fractal viewer.");
+    System.out.println("Please enter at least two roots, one root per line. Enter '" + END_OF_INPUT
+        + "' when done.");
+    Scanner sc = new Scanner(System.in);
+    int index = 1;
+    do {
+      System.out.print("Root " + index + "> ");
+      String input = sc.nextLine();
+      if (input.equals(END_OF_INPUT)) {
+        break;
+      }
+      Complex root = null;
+      try {
+        root = parseInput(input);
+      } catch (IllegalArgumentException ex) {
+        System.out.println("Input line doesn't match the supported format of complex numbers."
+            + " Please try again.");
+        continue;
+      }
+      System.out.println(root);
+      index++;
+    } while (true);
+    System.out.println("Image of fractal will appear shortly. Thank you.");
+    sc.close();
+  }
+
+  /**
+   * Auxiliary method which parses user's input for a complex number.
+   * 
+   * @param line
+   *          one line of user input
+   * @return a {@link Complex} number based on the line of input
+   * @throws IllegalArgumentException
+   *           in case of invalid input
+   */
+  private static Complex parseInput(String line) {
+    String realRegex = "(-?[0-9]+(?:[,.][0-9]+)?).*";
+    Pattern pattern = Pattern.compile(realRegex);
+    Matcher matcher = pattern.matcher(line.trim());
+    String real = matcher.matches() ? matcher.group(1).replace(',', '.') : null;
+    String imagRegex = ".*([+,-]?\\s*i(?:[0-9]+(?:[.,][0-9]*)?)?)";
+    pattern = Pattern.compile(imagRegex);
+    matcher = pattern.matcher(line.trim());
+    String imag = matcher.matches() ? matcher.group(1).replace(',', '.').replace("i", "") : null;
+    if (imag != null && imag.equals("")) {
+      imag = "0";
+    }
+
+    if (real != null && imag != null) {
+      return new Complex(Double.parseDouble(real), Double.parseDouble(imag));
+    } else if (real != null) {
+      return new Complex(Double.parseDouble(real), 0);
+    } else if (imag != null) {
+      return new Complex(0, Double.parseDouble(imag));
+    } else {
+      throw new IllegalArgumentException("Error occured due to bad input.");
+    }
+
+    // Pattern pattern = Pattern.compile(realRegex + imagRegex);
+    // Matcher matcher = pattern.matcher(line.trim());
+    // System.out.println(matcher.matches());
+    // String real = null;
+    // String imag = null;
+    // try {
+    // real = matcher.group(1);
+    // imag = matcher.group(2);
+    // return new Complex(Double.parseDouble(real), Double.parseDouble(imag));
+    // } catch (IllegalStateException ex) {
+    // if (real != null) {
+    // return new Complex(Double.parseDouble(real), 0);
+    // } else {
+    // try {
+    // imag = matcher.group(2);
+    // return new Complex(0, Double.parseDouble(imag));
+    // } catch (IllegalStateException ex1) {
+    // throw new IllegalArgumentException("Error occured due to bad input.");
+    // }
+    // }
+    // }
+
+  }
+
+}
